@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nequi - Transacciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .usuarios-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .usuario-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .usuario-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .usuario-info {
+            display: grid;
+            gap: 5px;
+        }
+
+        .usuario-info p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .usuario-info strong {
+            color: #333;
+        }
+
+        .saldo {
+            font-size: 1.3em;
+            color: #28a745;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .transacciones-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .transaccion-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+
+        .transaccion-item.enviado {
+            border-left-color: #dc3545;
+        }
+
+        .transaccion-item.recibido {
+            border-left-color: #28a745;
+        }
+
+        .transaccion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .transaccion-monto {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .transaccion-tipo {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .transaccion-tipo.enviado {
+            background: #ffeaea;
+            color: #dc3545;
+        }
+
+        .transaccion-tipo.recibido {
+            background: #e8f5e9;
+            color: #28a745;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💸 Nequi</h1>
+            <p>Microservicio de Transacciones</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="cards-container">
+            <!-- Formulario de Transacción -->
+            <div class="card">
+                <h2>Realizar Transacción</h2>
+                <form id="transaccionForm">
+                    <div class="form-group">
+                        <label for="numero_origen">Tu Número de Celular *</label>
+                        <select id="numero_origen" required>
+                            <option value="">Selecciona tu número</option>
+                            <option value="3001234567">3001234567 - Juan Pérez</option>
+                            <option value="3009876543">3009876543 - María García</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numero_destino">Número de Destino *</label>
+                        <input type="text" id="numero_destino" placeholder="Ej: 3001234567" required pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monto">Monto *</label>
+                        <input type="number" id="monto" placeholder="Ej: 50000" required min="1" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mensaje">Mensaje (Opcional)</label>
+                        <textarea id="mensaje" placeholder="Escribe un mensaje..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Enviar Dinero</button>
+                </form>
+            </div>
+
+            <!-- Usuarios Registrados -->
+            <div class="card">
+                <h2>Usuarios Registrados</h2>
+                <div id="usuariosContainer" class="loading">
+                    Cargando usuarios...
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de Transacciones -->
+        <div class="card">
+            <h2>Historial de Transacciones</h2>
+            <div id="transaccionesContainer" class="loading">
+                Cargando transacciones...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para mostrar alertas
+        function mostrarAlerta(mensaje, tipo) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${tipo}`;
+            alert.textContent = mensaje;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Cargar usuarios
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch('/api/usuarios');
+                const usuarios = await response.json();
+                
+                const container = document.getElementById('usuariosContainer');
+                container.innerHTML = '';
+                container.className = 'usuarios-grid';
+
+                usuarios.forEach(usuario => {
+                    const usuarioCard = document.createElement('div');
+                    usuarioCard.className = 'usuario-card';
+                    usuarioCard.innerHTML = `
+                        <h3>${usuario.nombre}</h3>
+                        <div class="usuario-info">
+                            <p><strong>Celular:</strong> ${usuario.numero_celular}</p>
+                            <p class="saldo">${usuario.saldo}</p>
+                        </div>
+                    `;
+                    container.appendChild(usuarioCard);
+                });
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error);
+            }
+        }
+
+        // Cargar transacciones
+        async function cargarTransacciones() {
+            try {
+                const response = await fetch('/api/transacciones');
+                const transacciones = await response.json();
+                
+                const container = document.getElementById('transaccionesContainer');
+                container.innerHTML = '';
+                container.className = 'transacciones-list';
+
+                if (transacciones.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">No hay transacciones registradas</p>';
+                    return;
+                }
+
+                transacciones.forEach(trans => {
+                    const transItem = document.createElement('div');
+                    transItem.className = 'transaccion-item';
+                    transItem.innerHTML = `
+                        <div class="transaccion-header">
+                            <span class="transaccion-monto">${trans.monto}</span>
+                            <span class="transaccion-tipo ${trans.estado.toLowerCase()}">${trans.estado}</span>
+                        </div>
+                        <p><strong>De:</strong> ${trans.nombre_origen} (${trans.numero_origen})</p>
+                        <p><strong>Para:</strong> ${trans.nombre_destino} (${trans.numero_destino})</p>
+                        ${trans.mensaje ? `<p><strong>Mensaje:</strong> ${trans.mensaje}</p>` : ''}
+                        <p style="font-size: 0.85em; color: #666; margin-top: 5px;">${trans.fecha}</p>
+                    `;
+                    container.appendChild(transItem);
+                });
+            } catch (error) {
+                console.error('Error al cargar transacciones:', error);
+            }
+        }
+
+        // Manejar envío del formulario
+        document.getElementById('transaccionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const numero_origen = document.getElementById('numero_origen').value;
+            const numero_destino = document.getElementById('numero_destino').value;
+            const monto = document.getElementById('monto').value;
+            const mensaje = document.getElementById('mensaje').value;
+
+            try {
+                const response = await fetch('/api/transaccion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        numero_origen,
+                        numero_destino,
+                        monto,
+                        mensaje
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarAlerta('¡Transacción exitosa! ' + data.mensaje, 'success');
+                    document.getElementById('transaccionForm').reset();
+                    cargarUsuarios();
+                    cargarTransacciones();
+                } else {
+                    mostrarAlerta('Error: ' + data.error, 'error');
+                }
+            } catch (error) {
+                mostrarAlerta('Error al procesar la transacción', 'error');
+                console.error('Error:', error);
+            }
+        });
+
+        // Cargar datos iniciales
+        cargarUsuarios();
+        cargarTransacciones();
+
+        // Actualizar cada 5 segundos
+        setInterval(() => {
+            cargarUsuarios();
+            cargarTransacciones();
+        }, 5000);
+    </script>
+</body>
+</html>
