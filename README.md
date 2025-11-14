@@ -1,4 +1,6 @@
-# 💸 Nequi - Microservicio de Transacciones
+# 💸 NequiZ - Integración de primer Microservicio
+
+# Integraciòn de primer Microservicio
 
 Aplicación web que simula el sistema de transacciones de Nequi usando Python Flask.
 
@@ -13,22 +15,30 @@ Aplicación web que simula el sistema de transacciones de Nequi usando Python Fl
 
 ## 🚀 Instalación
 
-### 1. Crear estructura de carpetas
+### 1. Crear Entorno Virtual (Recomendado)
+```
+cd ~/nequi_app
+```
+Crear entorno virtual
+```
+python3 -m venv venv
+```
+Activar entorno virtual
+```
+source venv/bin/activate
+```
+Tu terminal debería mostrar `(venv)` al inicio:
+```
+(venv) usuario@ubuntu:~/nequi_app$
+```
 
-```
-nequi_app/
-│
-├── app.py
-├── requirements.txt
-└── templates/
-    └── index.html
-```
 
 ### 2. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
 ```
+
 
 ### 3. Ejecutar la aplicación
 
@@ -37,6 +47,8 @@ python app.py
 ```
 
 La aplicación estará disponible en: **http://127.0.0.1:5000**
+
+
 
 ## 👥 Usuarios Pre-registrados
 
@@ -167,15 +179,6 @@ La aplicación utiliza SQLite con las siguientes tablas:
 - `fecha`: TEXT
 - `estado`: TEXT
 
-## 🎯 Próximas Funcionalidades (Fase 2)
-
-- Sistema de autenticación y login
-- Registro de nuevos usuarios
-- Recarga de saldo
-- Retiro de dinero
-- Historial con filtros avanzados
-- Notificaciones de transacciones
-- QR para pagos rápidos
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -193,7 +196,7 @@ La aplicación utiliza SQLite con las siguientes tablas:
 
 ## 🔒 Seguridad
 
-Esta es una versión de desarrollo. Para producción se recomienda:
+Esta es una versión de desarrollo. Para siguientes versiones se planea desarrollar:
 - Implementar autenticación JWT
 - Usar variables de entorno
 - Cifrar contraseñas
