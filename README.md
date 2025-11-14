@@ -1,6 +1,6 @@
 # 💸 NequiZ - Integración de primer Microservicio
 
-# Integraciòn de primer Microservicio
+# Integración de primer Microservicio
 
 Aplicación web que simula el sistema de transacciones de Nequi usando Python Flask.
 
