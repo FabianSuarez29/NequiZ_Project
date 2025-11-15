@@ -52,8 +52,9 @@ def init_db():
     # Insertar usuarios de prueba solo si no existen
     if count == 0:
         usuarios_prueba = [
-            ('Juan Pérez', '3001234567', 500000.00),
-            ('María García', '3009876543', 750000.00)
+            ('Andres Gerena', '3001234567', 500000.00),
+            ('Fabian Suarez', '3009876543', 750000.00),
+            ('Camila Mosquera', '3108556655', 10000.00)
         ]
         
         fecha_actual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -273,8 +274,9 @@ if __name__ == '__main__':
     print("NEQUI - Microservicio de Transacciones")
     print("=" * 50)
     print("\nUsuarios registrados:")
-    print("1. Juan Pérez - 3001234567 - Saldo: $500,000")
-    print("2. María García - 3009876543 - Saldo: $750,000")
+    print("1. Andres Gerena - 3001234567 - Saldo: $1,000,000")
+    print("2. Fabian Suarez - 3009876543 - Saldo: $900,000")
+    print("3. Camila Mosquera- 3108556655 - Saldo: $750,000")
     print("\nServidor iniciado en: http://127.0.0.1:5000")
     print("=" * 50)
     app.run(debug=True)
